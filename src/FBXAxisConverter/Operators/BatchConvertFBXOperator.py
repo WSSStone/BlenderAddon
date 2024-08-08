@@ -8,18 +8,22 @@ class BatchConvertFBXOperator(bpy.types.Operator):
     bl_idname = "import_export.batch_convert_fbx"
     bl_label = "Batch Convert FBX"
     
-    input_dir: bpy.props.StringProperty(
+    cvt_fbx_input_dir: bpy.props.StringProperty(
         name="Input Directory",
         subtype='DIR_PATH'
     )
-    output_dir: bpy.props.StringProperty(
+    cvt_fbx_output_dir: bpy.props.StringProperty(
         name="Output Directory",
         subtype='DIR_PATH'
     )
 
     def execute(self, context):
-        input_dir = context.scene.input_dir
-        output_dir = context.scene.output_dir
+        input_dir = context.scene.cvt_fbx_input_dir
+        output_dir = context.scene.cvt_fbx_output_dir
+
+        if not input_dir or not output_dir:
+            self.report({'ERROR'}, "Input and Output directories must be set.")
+            return {'CANCELLED'}
 
         print({'INFO'}, f"Input Directory: {input_dir}")
         print({'INFO'}, f"Output Directory: {output_dir}")
