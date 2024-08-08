@@ -1,0 +1,30 @@
+# Blender Addon Framework
+## 1.Requirements
+## 2.How to Use
+### 2.1 Create Addon
+Create single addon under [src](./src/) folder. A typical addon file structure should be like:
+- **Addon Name**
+  - (**Folders**)
+  - main.py
+
+The [main.py]() must contain following content:
+```python
+# addon info and requirements
+bl_info = {
+    "name": "**Detailed-name-of-this-addon**",
+    "blender": (**Major version**, **Minor version**, 0),
+    "category": "Category",
+}
+
+# register function for load this addon
+def register():
+    bpy.utils.register_class('''impls of bpy.types.Operator''')
+    bpy.utils.register_class('''impls of bpy.types.Panel''')
+
+# unregister function for unload this addon
+def unregister():
+    bpy.utils.unregister_class('''impls of bpy.types.Operator''')
+    bpy.utils.unregister_class('''impls of bpy.types.Panel''')
+```
+### 2.2 Publish Addon
+Run [publish.py](./publish.py), addons shall be published into [out](./out/) folder.
