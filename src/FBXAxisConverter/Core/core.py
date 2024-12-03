@@ -1,6 +1,6 @@
 import bpy
 
-def convert_fbx_to_maya_coord(self, fbx_path, output_fbx_path):
+def convert_fbx_to_maya_coord(fbx_path, output_fbx_path):
     print(f"Processing file: {fbx_path} to {output_fbx_path}")
         
     # Import the FBX file

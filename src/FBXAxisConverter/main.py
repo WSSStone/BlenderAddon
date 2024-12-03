@@ -9,6 +9,7 @@ import os
 
 from Operators.ConvertFBXOperator import ConvertFBXOperator
 from Operators.BatchConvertFBXOperator import BatchConvertFBXOperator
+from Operators.BatchSimpleExport import BatchSimpleExportOperator
 
 class BatchConvertFBXPanel(bpy.types.Panel):
     """Creates a Panel in the scene context of the properties editor"""
@@ -31,6 +32,11 @@ class BatchConvertFBXPanel(bpy.types.Panel):
         layout.prop(scene, "cvt_fbx_input_dir")
         layout.prop(scene, "cvt_fbx_output_dir")
         layout.operator("import_export.batch_convert_fbx")
+        
+        layout.separator
+        
+        layout.prop(scene, "fbx_output_dir")
+        layout.operator("import_export.batch_export_fbx")
 
 def register():
     bpy.types.Scene.cvt_fbx_input_path = bpy.props.StringProperty(
@@ -53,18 +59,27 @@ def register():
         subtype='DIR_PATH',
         default=""
     )
+    bpy.types.Scene.fbx_output_dir = bpy.props.StringProperty(
+        name="Export Directory",
+        subtype='DIR_PATH',
+        default=""
+    )
     bpy.utils.register_class(ConvertFBXOperator)
     bpy.utils.register_class(BatchConvertFBXOperator)
+    bpy.utils.register_class(BatchSimpleExportOperator)
     bpy.utils.register_class(BatchConvertFBXPanel)
 
 def unregister():
     bpy.utils.unregister_class(ConvertFBXOperator)
     bpy.utils.unregister_class(BatchConvertFBXOperator)
+    bpy.utils.unregister_class(BatchSimpleExportOperator)
     bpy.utils.unregister_class(BatchConvertFBXPanel)
+    
     del bpy.types.Scene.cvt_fbx_input_path
     del bpy.types.Scene.cvt_fbx_output_path
     del bpy.types.Scene.cvt_fbx_input_dir
     del bpy.types.Scene.cvt_fbx_output_dir
+    del bpy.types.Scene.fbx_output_dir
 
 if __name__ == "__main__":
     register()
