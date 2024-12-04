@@ -2,9 +2,9 @@ import bpy
 
 from Core.find_linked import find_linked_objects
 
-class FindLinkedObjectsOperator(bpy.types.Operator):
-    bl_label = "Find Linked Objects"
-    bl_idname = "object.find_linked_objects"
+class SetCustomPropertyOperator(bpy.types.Operator):
+    bl_label = "Propagate All Custom Properties to Linked Objects"
+    bl_idname = "object.set_custom_property"
 
     def execute(self, context):
         selected_obj = context.object
@@ -15,8 +15,8 @@ class FindLinkedObjectsOperator(bpy.types.Operator):
         # Display the linked objects in the console or as a popup
         self.report({'INFO'}, f"Linked objects: {linked_objects}")
 
-        bpy.ops.object.select_all(action='DESELECT')
         for obj in linked_objects:
-            bpy.data.objects[obj].select_set(True)
+            for k, v in selected_obj.items():
+                bpy.data.objects[obj][k] = v
 
         return {'FINISHED'}

@@ -18,29 +18,39 @@ class ExportLinkedInstanceDataOperator(bpy.types.Operator):
         # Write to CSV file
         with open(self.filepath, mode='w', newline='') as file:
             writer = csv.writer(file)
-            # Write the header
+
+            # Write headers
             writer.writerow(['Name', 'Location.X', 'Location.Y', 'Location.Z',
-            'Quaternion.W', 'Quaternion.X', 'Quaternion.Y', 'Quaternion.Z',
-            'Scale.X', 'Scale.Y', 'Scale.Z', 'Mesh'])
+                'Quaternion.X', 'Quaternion.Y', 'Quaternion.Z', 'Quaternion.W',
+                'Scale.X', 'Scale.Y', 'Scale.Z', 'Mesh'])
 
             # Write data for each linked object
-            for obj in linked_objects:
+            for name in linked_objects:
+                obj = bpy.data.objects[name]
+                self.report({'INFO'}, f"{obj} {name}")
+
                 # Check if custom property "Mesh" exists
                 mesh_property = obj.get("Mesh", "N/A")
+
+                '''
+                A Reminder:
+                    if use in Unreal:
+                        UnrealWorldLocation = BlenderLocation * 100 * (1.0, -1.0, 1.0)
+                        UnrealQuat = BlenderQuat * (-1.0, 1.0, -1.0, 1.0)
+                '''
                 writer.writerow([
                     obj.name,
-                    obj.location[0],
+                    obj.location[0], 
                     obj.location[1],
                     obj.location[2],
-                    obj.rotation_quaternion[0],
-                    obj.rotation_quaternion[1],
-                    obj.rotation_quaternion[2],
-                    obj.rotation_quaternion[3],
-                    obj.scale[0],
+                    obj.rotation_quaternion[1], # X
+                    obj.rotation_quaternion[2], # Y
+                    obj.rotation_quaternion[3], # Z
+                    obj.rotation_quaternion[0], # W
+                    obj.scale[0], 
                     obj.scale[1],
                     obj.scale[2],
-                    mesh_property
-                ])
+                    mesh_property])
 
         file.close()
 
@@ -51,4 +61,5 @@ class ExportLinkedInstanceDataOperator(bpy.types.Operator):
     def invoke(self, context, event):
         # Show a file selector when the operator is invoked
         context.window_manager.fileselect_add(self)
+        
         return {'RUNNING_MODAL'}

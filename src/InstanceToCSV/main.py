@@ -9,6 +9,7 @@ import os
 
 from Operators.FindLinkedObjects import FindLinkedObjectsOperator
 from Operators.ExportLinkedInstanceData import ExportLinkedInstanceDataOperator
+from Operators.SetCustomProperty import SetCustomPropertyOperator
 
 class ReferenceRelationsPanel(bpy.types.Panel):
     """Export Object's Linked Instance Data to CSV"""
@@ -28,7 +29,11 @@ class ReferenceRelationsPanel(bpy.types.Panel):
         
         layout.separator
         
-        layout.prop(obj, "csv_path")
+        layout.label(text="Custom Properties:")
+        layout.operator("object.set_custom_property", text="Propagate All Custom Properties to Linked Objects")
+
+        layout.separator
+        layout.label(text="Export Linked Instance Data:")
         layout.operator("object.export_linked_instance_data", text="Export Linked Instance Data")
 
 def register():
@@ -40,11 +45,13 @@ def register():
     
     bpy.utils.register_class(FindLinkedObjectsOperator)
     bpy.utils.register_class(ExportLinkedInstanceDataOperator)
+    bpy.utils.register_class(SetCustomPropertyOperator)
     bpy.utils.register_class(ReferenceRelationsPanel)
 
 def unregister():
     bpy.utils.unregister_class(FindLinkedObjectsOperator)
     bpy.utils.unregister_class(ExportLinkedInstanceDataOperator)
+    bpy.utils.unregister_class(SetCustomPropertyOperator)
     bpy.utils.unregister_class(ReferenceRelationsPanel)
     
     del bpy.types.Scene.csv_path
