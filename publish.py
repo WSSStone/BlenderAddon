@@ -1,53 +1,72 @@
 import os
 import configparser
 import subprocess
+import git
 
-config = configparser.ConfigParser()
-config.read('config.ini')
-WINRAR = config['Paths']['winrar_path']
-SRC_DIR = os.path.realpath("./src")
-DST_DIR = os.path.realpath("./out")
+class publisher:
+    def __init__(self):
+        self.config = configparser.ConfigParser()
+        self.config.read('config.ini')
+        self.WINRAR = self.config['Paths']['winrar_path']
+        self.SRC_DIR = os.path.realpath("./src")
+        self.DST_DIR = os.path.realpath("./out")
+        
+        self.changed_addons = {}
 
-def zip(addon:str):
-    cwd = os.getcwd()
+    def zip(self, addon:str):
+        cwd = os.getcwd()
 
-    src = os.path.join(SRC_DIR, addon)
-    dst = os.path.join(DST_DIR, addon)
+        src = os.path.join(self.SRC_DIR, addon)
+        dst = os.path.join(self.DST_DIR, addon)
 
-    os.chdir(src)
+        os.chdir(src)
 
-    cmd = f'"{WINRAR}" a -r -afzip "{dst}.zip" "*"'
+        cmd = f'"{self.WINRAR}" a -r -afzip "{dst}.zip" "*"'
 
-    subprocess.run(cmd, shell=True, cwd=os.getcwd())
+        subprocess.run(cmd, shell=True, cwd=os.getcwd())
 
-    os.chdir(cwd)
+        os.chdir(cwd)
 
-def publish():    
-    for addon in os.listdir(SRC_DIR):
-        zip(addon)
-    
-def cleanup():
-    for f in os.listdir(DST_DIR):
-        os.remove(os.path.join(DST_DIR, f))
+    def publish(self):    
+        for addon in self.changed_addons:
+            self.zip(addon)
+        
+    def cleanup(self):
+        for addon in self.changed_addons:
+            p = os.path.join(self.DST_DIR, f'{addon}.zip')
+            if os.path.exists(p):
+                os.remove(p)
 
-def check():
-    if not os.path.exists(f'{WINRAR}'):
-        print(f'{WINRAR}')
-        raise Exception("WinRAR not found. Configure WinRAR path in config.ini.")
+    def check_changes(self):
+        repo = git.Repo(os.getcwd())
 
-    if not os.path.exists(SRC_DIR):
-        raise Exception("Source directory lost. Repull repo.")
-    
-    os.makedirs(DST_DIR, exist_ok=True)
+        diff = repo.index.diff(None)
+        for item in diff:
+            if 'src/' in item.a_path:
+                addon = item.a_path.split('/')[1]
+                self.changed_addons[addon] = True
 
-def main():
-    check()
+    def check_dependency(self):
+        if not os.path.exists(f'{self.WINRAR}'):
+            print(f'{self.WINRAR}')
+            raise Exception("WinRAR not found. Configure WinRAR path in config.ini.")
 
-    cleanup()
+        if not os.path.exists(self.SRC_DIR):
+            raise Exception("Source directory lost. Repull repo.")
+        
+        os.makedirs(self.DST_DIR, exist_ok=True)
 
-    publish()
+    def main(self):
+        self.check_dependency()
 
-    print("===== FINISHED =====")
+        self.check_changes()
+
+        self.cleanup()
+
+        self.publish()
+
+        print("===== FINISHED =====")
 
 if __name__ == '__main__':
-    main()
+    publisher = publisher()
+    publisher.main()
