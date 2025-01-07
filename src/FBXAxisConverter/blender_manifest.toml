@@ -1,0 +1,15 @@
+schema_version = "1.0.0"
+
+id = "FBXAxisConverter"
+version = "1.0.0"
+name = "FBX Axis Converter"
+tagline = "Convert FBX Axis to Blender Axis"
+maintainer = "WSSStone"
+type = "add-on"
+
+blender_version_min = "4.2.0"
+license = [
+  "SPDX:GPL-3.0-or-later",
+]
+
+platforms = ["windows-x64"]

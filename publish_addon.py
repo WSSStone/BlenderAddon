@@ -3,7 +3,7 @@ import configparser
 import subprocess
 import git
 
-class publisher:
+class addon_publisher:
     def __init__(self):
         self.config = configparser.ConfigParser()
         self.config.read('config.ini')
@@ -68,5 +68,5 @@ class publisher:
         print("===== FINISHED =====")
 
 if __name__ == '__main__':
-    publisher = publisher()
+    publisher = addon_publisher()
     publisher.main()
