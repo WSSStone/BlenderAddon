@@ -64,7 +64,7 @@ class extension_publisher:
             self.check_changes()
         else:
             for ext in os.listdir(self.SRC_DIR):
-                if os.isdir(os.path.join(self.SRC_DIR, ext)):
+                if os.path.isdir(os.path.join(self.SRC_DIR, ext)):
                     self.publications[ext] = True
 
 
