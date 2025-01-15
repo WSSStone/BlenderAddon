@@ -1,5 +1,6 @@
 import bpy
 import os
+import csv
 
 def find_linked_objects(selected_obj, objs) -> list:
     linked_objects = []
