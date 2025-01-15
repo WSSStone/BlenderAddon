@@ -112,17 +112,25 @@ class extension_publisher:
 
 
     def run(self):
+        print("===== STARTING PUBLISHING PROCESS =====")
+        
         self.check_dependency()
-
+        print("===== DEPENDENCY CHECKED =====")
+        
         self.validate_manifest()
+        print("===== MANIFEST VALIDATED =====")
 
         self.alloc_publications(check_changes=False)
+        print("===== PUBLICATIONS ALLOCATED =====")
 
         self.cleanup()
+        print("===== CLEANUP FINISHED =====")
 
         self.publish()
+        print("===== PUBLICATION FINISHED =====")
 
         self.validate_zip()
+        print("===== ZIP VALIDATED =====")
 
         print("===== FINISHED =====")
 
